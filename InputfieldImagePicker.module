@@ -15,7 +15,7 @@ class InputfieldImagePicker extends Inputfield {
     public static function getModuleInfo() {
         return [
             'title' => 'ImagePicker Input',
-            'version' => 90,
+            'version' => 91,
             'summary' => 'Input field for Images.',
             'requires' => 'FieldtypeImagePicker',
         ];
@@ -92,7 +92,7 @@ class InputfieldImagePicker extends Inputfield {
         $html->markupText .= '<div class="IpPreviewImageDiv">';
         if ($edurl)
             $html->markupText .= '<a title="' . $this->_('Edit Original') . '" target="_blank" href="' . $edurl . '#wrap_Inputfield_' . $this->lastfieldtype . '">';
-        $html->markupText .= '<img class="IpPreviewImage" onerror="this.style.display=\'none\'" id="pv_' . $this->sid . '" src="' . $this->attr('value') . '">';
+        $html->markupText .= '<img class="IpPreviewImage" alt="" onerror="this.style.display=\'none\'" id="pv_' . $this->sid . '" src="' . $this->attr('value') . '">';
         if ($edurl)
             $html->markupText .= '</a>';
         $html->markupText .= '</div>';

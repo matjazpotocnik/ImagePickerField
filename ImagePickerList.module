@@ -13,33 +13,40 @@ class ImagePickerList extends Process implements Module {
     public static function getModuleInfo() {
         return array(
             'title' => 'ImagePicker Lister',
-            'version' => 90,
+            'version' => 91,
             'summary' => 'ImagePicker Lister',
             'singular' => true,
             'autoload' => false,
-			'permission' => 'imagepicker'
+            'permission' => 'imagepicker',
         );
     }
 
     public function ___execute() {
+        $sid = $this->input->get('sid');
+        $config = $this->session->get($sid);
+        if(!$config) return $this->_('Process not callable in this context.');
+
+        $usid = urlencode($sid);
+
         $admin = $this->pages->get($this->config->adminRootPageID);
         $parent = $admin->child("name=setup");
         if (!$parent->id)
             $parent = $admin;
         $page = $parent->child("name=" . self::adminPageName);
 
-        $sid = $this->input->get('sid');
-        $config = $this->session->get($sid);
-        $usid = urlencode($sid);
-
         $selectors = $config["sele"];
         $thumbw = $config["thumbw"];
+        $thumbs = $config["thumbs"];
+        bd($thumbw, $thumbs);
 
         if (substr($selectors, 0, 1) != ',')
             $selectors = ',' . $selectors;
 
         if ($thumbw < 50)
-            $thumbw = 150;
+            $thumbw = 260;
+        if ($thumbs && $thumbs == '')
+            $thumbs = 'height';
+        bd($thumbw, $thumbs);
 
         $get = $this->input->get('id');
 
@@ -66,15 +73,15 @@ class ImagePickerList extends Process implements Module {
         $filter .= $selectors;
         foreach ($this->fields->find("type=FieldtypeImage") as $f) {
             foreach ($this->pages->find("$f.count>0$filter") as $p) {
-				$ofstatus=$p->of();
+        $ofstatus=$p->of();
                 $p->of(false);
                 $out .= '<h4><a href="' . $page->url . '?sid=' . $usid . '&id=' . $p->id . '&modal=1">' . $p->title . '</a> (' . count($p->$f) . ')</h4>';
                 if ($showimages) {
                     $out .= '<div class="flex-container">';
                     foreach ($p->$f as $i) {
-                        if ($i->width > 260) {
+                        if ($i->$thumbs > 260) {
                             $origurl = $i->url;
-                            $i = $i->width(260);
+                            $i = $i->$thumbs(260);
                         } else
                             $origurl = $i->url;
                         $out .= '<div class="imgcont"><img title="' . ($i->description ? $i . '&#013;&#010;'.$i->description.'' : $i) . '" class="selectableimg lazyload" data-origurl=' . $origurl . ' data-src="' . $i->url . '"></div>';
@@ -97,7 +104,7 @@ class ImagePickerList extends Process implements Module {
         $this->message("Installed to {$page->path}");
         if ($page->parent->name == 'setup')
             $this->message("ImageSelector installed.");
-            
+
         // create imagepicker permission
         $permission = $this->permissions->get("imagepicker");
         if (!$permission->id) {
@@ -106,12 +113,12 @@ class ImagePickerList extends Process implements Module {
             $permission->title = $this->_("Access Image Picker");
             $permission->save();
             $this->message("Created Permission: {$permission->name}");
-        }            
-            
+        }
+
     }
 
     /**
-     * Return the page that this Process is installed on 
+     * Return the page that this Process is installed on
      *
      */
     protected function getInstalledPage() {
@@ -129,6 +136,7 @@ class ImagePickerList extends Process implements Module {
             $page->name = self::adminPageName;
             $page->title = "Image Picker List";
             $page->process = $this;
+            $page->icon = 'file-image-o';
             $page->sort = $parent->numChildren;
             $page->save();
         }
@@ -146,14 +154,14 @@ class ImagePickerList extends Process implements Module {
             $this->message("Removed {$page->path}");
             $this->pages->delete($page);
         }
-        
+
         // delete permission
         $permission = $this->permissions->get("imagepicker");
         if ($permission->id) {
             $permission->delete();
             $this->message("Deleted Permission: {$permission->name}");
-        }        
-        
+        }
+
     }
 
 }

@@ -1,33 +1,34 @@
 .flex-container {
     display: flex;
     flex-wrap: wrap;
-    background-color:white;
+    /*justify-content: space-evenly;*/
+    background-color: #fff;
 }
 
-.flex-container>div {
-    background-color: #1c2836;
+.flex-container > div {
+    background-color: #2a3e56;
     margin: 10px 10px 10px 0px;
-    padding:10px;
+    padding: 10px;
     font-size: 30px;
-    width:150px;
-    height:150px;
+    width: 150px; /* will be overwritten if needed */
+    height: 150px; /* will be overwritten if needed */
     vertical-align: middle;
-    border-radius: 5px;    
-}    
+    border-radius: 4px;
+}
 
 .sys {
-    font-style: italic;   
-    background-color: #476689;
+    /*font-style: italic;*/
+    /*background-color: #476689;*/
     background-color: #6c8dae;
-    color:white;
+    color: #fff;
 }
 
 .sys a {
-    color:white;
+    color: white;
 }
 
-img { 
-    padding: 8px;    
+img {
+    padding: 8px;
     display: block;
     position: relative;
     top: 50%;
@@ -38,10 +39,13 @@ img {
     margin-left: auto;
     margin-right: auto;
 }
+img:hover {
+	cursor: pointer;
+}
 
 h3, h4, h5 {
-    margin: 15px 0 3px 0; 
+    margin: 15px 0 3px 0;
     background-color: #dee5ee;
     font-weight: bold;
-    padding: 5px 5px 5px 8px;
+    padding: 6px 6px 6px 9px;
 }

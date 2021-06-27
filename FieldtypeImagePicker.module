@@ -15,15 +15,12 @@ class FieldtypeImagePicker extends FieldtypeText {
     public static function getModuleInfo() {
         return [
             'title' => 'ImagePicker Field',
-            'version' => 90,
+            'version' => 91,
             'summary' => 'Field that stores an Image URL.',
             'installs' => 'InputfieldImagePicker, ImagePickerList',
         ];
     }
 
-    /**
-     * Per Module interface, this template method is called when all system classes are loaded and ready for API usage
-     */
     public function init() {
         parent::init();
     }
@@ -40,11 +37,12 @@ class FieldtypeImagePicker extends FieldtypeText {
         $inputField = $this->modules->get("InputfieldImagePicker");
         $this->session->ip_filters = $field->filters;
         $this->session->ip_thumbwidth = $field->thumnailwidth;
+        $this->session->ip_thumbsizer = $field->thumnailsizer;
 
         $inputField->setPage($page);
         $inputField->setField($field);
         $this->sid = 'ip_' . $page->id . '_' . $field->name;
-        $this->session->set($this->sid, array('sele' => $field->filters, 'thumbw' => $field->thumnailwidth));
+        $this->session->set($this->sid, array('sele' => $field->filters, 'thumbw' => $field->thumnailwidth, 'thumbs' => $field->thumnailsizer));
 
         return $inputField;
     }
@@ -66,12 +64,26 @@ class FieldtypeImagePicker extends FieldtypeText {
         $f->attr('name', 'thumnailwidth');
         $val = $field->get('thumnailwidth');
         if (!$val)
-            $val = 150;
+            $val = 260;
         $f->attr('value', (int) $val);
         $f->attr('size', 3);
-        $f->label = $this->_('Thumbnail width');
+        $f->label = $this->_('Thumbnail size');
         $f->description = $this->_('Pixels');
         $f->collapsed = Inputfield::collapsedBlank;
+        $f->columnWidth = 50;
+        $inputfields->append($f);
+
+        $f = $this->modules->get('InputfieldRadios');
+        $f->attr('name', 'thumnailsizer');
+        $f->label = $this->_('Thumbnail size dimension');
+        $f->description = $this->_('Select whether the "Thumbnail size" field represents the width or the height.');
+        $f->addOption('width',  $this->_('Width'));
+        $f->addOption('height', $this->_('Height'));
+        $val = $field->get('thumnailsizer');
+        if (!$val)
+            $val = 'width';
+        $f->attr('value', $val);
+        $f->columnWidth = 50;
         $inputfields->append($f);
 
         return $inputfields;
