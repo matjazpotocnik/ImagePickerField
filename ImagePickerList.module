@@ -15,6 +15,8 @@ class ImagePickerList extends Process implements Module {
             'title' => 'ImagePicker Lister',
             'version' => 91,
             'summary' => 'ImagePicker Lister',
+            'author' => 'theo222',
+            'icon' => 'picture-o',
             'singular' => true,
             'autoload' => false,
             'permission' => 'imagepicker',
@@ -136,8 +138,9 @@ class ImagePickerList extends Process implements Module {
             $page->name = self::adminPageName;
             $page->title = "Image Picker List";
             $page->process = $this;
-            $page->icon = 'file-image-o';
+            $page->icon = 'image';
             $page->sort = $parent->numChildren;
+            $page->addStatus('hidden');
             $page->save();
         }
 

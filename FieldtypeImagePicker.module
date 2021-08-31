@@ -14,9 +14,12 @@ class FieldtypeImagePicker extends FieldtypeText {
      */
     public static function getModuleInfo() {
         return [
-            'title' => 'ImagePicker Field',
+            'title' => 'ImagePicker',
             'version' => 91,
             'summary' => 'Field that stores an Image URL.',
+            'author' => 'theo222',
+            'href' => 'https://github.com/theo222/ImagePickerField',
+            'icon' => 'picture-o',
             'installs' => 'InputfieldImagePicker, ImagePickerList',
         ];
     }
@@ -35,14 +38,16 @@ class FieldtypeImagePicker extends FieldtypeText {
     public function getInputfield(Page $page, Field $field) {
         /** @var InputfieldImagePicker $inputField */
         $inputField = $this->modules->get("InputfieldImagePicker");
-        $this->session->ip_filters = $field->filters;
-        $this->session->ip_thumbwidth = $field->thumnailwidth;
-        $this->session->ip_thumbsizer = $field->thumnailsizer;
+        $session = $this->session;
+
+        $session->ip_filters = $field->filters;
+        $session->ip_thumbwidth = $field->thumnailwidth;
+        $session->ip_thumbsizer = $field->thumnailsizer;
 
         $inputField->setPage($page);
         $inputField->setField($field);
         $this->sid = 'ip_' . $page->id . '_' . $field->name;
-        $this->session->set($this->sid, array('sele' => $field->filters, 'thumbw' => $field->thumnailwidth, 'thumbs' => $field->thumnailsizer));
+        $session->set($this->sid, array('sele' => $field->filters, 'thumbw' => $field->thumnailwidth, 'thumbs' => $field->thumnailsizer));
 
         return $inputField;
     }
@@ -50,8 +55,9 @@ class FieldtypeImagePicker extends FieldtypeText {
     public function ___getConfigInputfields(Field $field) {
 
         $inputfields = parent::___getConfigInputfields($field);
+        $modules = $this->modules;
 
-        $f = $this->modules->get('InputfieldText');
+        $f = $modules->get('InputfieldText');
         $f->attr('name', 'filters');
         $f->label = $this->_('Selectors');
         $f->description = $this->_('Enter selectors to restrict page selection.');
@@ -60,7 +66,7 @@ class FieldtypeImagePicker extends FieldtypeText {
         $f->attr('value', $field->get('filters'));
         $inputfields->append($f);
 
-        $f = $this->modules->get('InputfieldInteger');
+        $f = $modules->get('InputfieldInteger');
         $f->attr('name', 'thumnailwidth');
         $val = $field->get('thumnailwidth');
         if (!$val)
@@ -73,7 +79,7 @@ class FieldtypeImagePicker extends FieldtypeText {
         $f->columnWidth = 50;
         $inputfields->append($f);
 
-        $f = $this->modules->get('InputfieldRadios');
+        $f = $modules->get('InputfieldRadios');
         $f->attr('name', 'thumnailsizer');
         $f->label = $this->_('Thumbnail size dimension');
         $f->description = $this->_('Select whether the "Thumbnail size" field represents the width or the height.');

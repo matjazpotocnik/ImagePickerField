@@ -17,6 +17,8 @@ class InputfieldImagePicker extends Inputfield {
             'title' => 'ImagePicker Input',
             'version' => 91,
             'summary' => 'Input field for Images.',
+            'icon' => 'picture-o',
+            'author' => 'theo222',
             'requires' => 'FieldtypeImagePicker',
         ];
     }
@@ -50,8 +52,8 @@ class InputfieldImagePicker extends Inputfield {
 			            $this->lastfieldtype = $f;
 			            return $img;
 			            break 2;
-		              }    
-                  } 
+		              }
+                  }
                 }
                 $p->of($ofstatus);
             }
